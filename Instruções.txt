@@ -1,0 +1,33 @@
+. Inicializar uma aplicação node
+    npm init -y (o -y serve para não precisar responder a quantidade de perguntas que é feita)
+
+. Pacotes necessários para o NODE rodar um servidor HTTP e habilitar o debug
+    npm install http express debug --save
+
+. Habilitar o ESLint no projeto
+    eslint --init
+
+. Para rodar o servidor
+    node .\bin\server.js (caminho do arquivo de configuração do servidor)
+    Você pode melhorar esse script adicionando uma linha de configuração no arquivo package.json dentro da tag script
+    "scripts": {
+        "start": "node ./bin/server.js"
+    },
+    para rodar, terminal
+        npm start (nome da tag declarada no pkg)
+
+. Monitorando a aplicação
+    sempre quando ocorrer alguma alteração em arquivos, é restartado o servidor.
+    instalar o nodemon 
+        npm install nodemon --save-dev
+            -dev signifca que será instalado somente em desenvolvimento.
+    rodando o nodemom
+        nodemom .\bin\server.js
+
+. Para converter o corpo da requisição em um json
+    Utilizar o pkg body-parser para efetuar a conversão
+        npm install body-parser --save
+    deve ser declarado o import para o node reconhecer esse midleware
+    Após deve ser adicionado no app que toda requisição deve ser convertida para o JSON.
+        app.use(bodyParser.json());
+        app.use(bodyParser.urlencoded({ extended: false }));
