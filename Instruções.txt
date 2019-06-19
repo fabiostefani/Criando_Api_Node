@@ -31,3 +31,9 @@
     Após deve ser adicionado no app que toda requisição deve ser convertida para o JSON.
         app.use(bodyParser.json());
         app.use(bodyParser.urlencoded({ extended: false }));
+
+. Conectando ao Mongo
+    Utilizar o mongoose
+        npm install mongoose --save
+    mongo sempre deixa a conexão aberta
+    colocar a string de conexão no app
