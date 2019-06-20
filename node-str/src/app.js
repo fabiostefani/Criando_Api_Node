@@ -11,9 +11,14 @@ const app = express();
 //conecta ao banco
 mongoose.connect('mongodb+srv://fabiostefani:fabiostefani@fabiostefani-mongodb-8xxdq.mongodb.net/test?retryWrites=true&w=majority')
 
+//carrega os models
+const Product = require('./models/product');
+
 //carrega as rotas
 const indexRoute = require('./routes/index-route');
 const productRoute = require('./routes/product-route');
+
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
