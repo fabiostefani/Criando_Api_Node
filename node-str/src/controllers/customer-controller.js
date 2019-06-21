@@ -3,105 +3,132 @@
 
 const mongoose = require('mongoose');
 const Customer = mongoose.model('Customer');
+const ValidationContract = require('../validators/fluent-validador');
+const repository = require('../repositories/customer-repository');
 
-exports.get = (req, res, next) => {
-    Customer.find({
-
-    }).then(data => {
+exports.get = async (req, res, next) => {
+    try{
+        var data = await repository.get();
         res.status(200).send(data);
-    }).catch(e => {
-        res.status(400).send(e);
-    })
+    }catch(e){
+        res.status(500).send({
+            message: 'Falha ao processar a requisição',
+            error: e
+        });
+    }    
 }
 
-exports.getByName = (req, res, next) => {
-    Customer.find({
-        name : req.params.name
-    }).then(data => {
+// function retStatusCode200 (res, data){
+//      res.status(200).send(data);
+// }
+
+// function retStatusCode400(res, erro){
+//     res.status(400).send({
+//         message: 'Falha ao processar a requisição',
+//         error: erro
+//     });
+// }
+
+exports.getByName = async(req, res, next) => {
+    try{
+        var data = await repository.getByName(req.params.name);
+        //retStatusCode200(data);
         res.status(200).send(data);
-    }).catch(e => {
-        res.status(400).send(e);
-    })
+    }catch (e){
+        // retStatusCode400(res, e) ;
+        res.status(400).send({
+            message: 'Falha ao processar a requisição',
+            error: erro
+        });
+    }    
 }
 
-exports.post = (req, res, next) => {
-    const customer = new Customer(req.body);
-    customer.save().then(x => {
+exports.post = async(req, res, next) => {
+
+    let contract = new ValidationContract();
+    contract.hasMinLen(req.body.name, 3, 'O Nome deve conter pelo menos 3 caracteres');
+    
+    if (!contract.isValid()){
+        res.status(400).send(contract.errors()).end();
+        return;
+    }
+    try {
+        await repository.create(req.body);
         res.status(201).send({
             message: "Cliente cadastrado com sucesso"
         });
-    }).catch(e=> {
+    } catch (e) {
         res.status(400).send({
             message: 'Falha ao cadastrar o cliente',
             data: req.body,
             error: e
         })
-    })
+    }
 }
 
-exports.put = (req, res, next) => {
-    Customer.findByIdAndUpdate(req.params.id, {
-        $set: {
-            name : req.body.name
-        }
-    }).then(e => {
+exports.put = async(req, res, next) => {
+    let contract = new ValidationContract();
+    contract.hasMinLen(req.body.name, 3, 'O Nome deve conter pelo menos 3 caracteres');
+    
+    if (!contract.isValid()){
+        res.status(400).send(contract.errors()).end();
+        return;
+    }
+    
+    try {
+        await repository.update(req.params.id, req.body);
         res.status(200).send({
             message: 'Cliente atualizado com sucesso'
         });
-    }).catch(e => {
+    } catch (e) {
         res.status(400).send({
             message: 'Erro atualizando o cliente',
             data: req.body,
             error: e
         })
-    })
+    }    
 }
 
-exports.delete = (req, res, next) => {
-    Customer.findByIdAndDelete(req.body.id).then(x => {
+exports.delete = async(req, res, next) => {
+    try {
+        await repository.delete(req.body.id);
         res.status(200).send({
             message: 'Cliente removido com sucesso'
         });
-    }).catch(e => {
+    } catch (e) {
         res.status(400).send({
             message: 'Erro ao remover o cliente',
             error: e
         })
-    })
+    }    
 }
 
-exports.inactivate = (req, res, next) => {
-    Customer.findByIdAndUpdate(req.params.id, {
-        $set: {
-            active : false
-        }
-    }).then(e => {
+exports.inactivate = async(req, res, next) => {
+    try {
+        await repository.inactivate(req.params.id);
         res.status(200).send({
             message: 'Cliente inativado com sucesso'
         });
-    }).catch(e => {
+    } catch (e) {
         res.status(400).send({
             message: 'Erro inativando o cliente',
             data: req.body,
             error: e
         })
-    })
+    }    
 }
 
-exports.activate = (req, res, next) => {
-    Customer.findByIdAndUpdate(req.params.id, {
-        $set: {
-            active : true
-        }
-    }).then(e => {
+exports.activate = async(req, res, next) => {
+    try {
+        await repository.activate(req.params.id);
         res.status(200).send({
             message: 'Cliente ativado com sucesso'
         });
-    }).catch(e => {
+    } catch (e) {
         res.status(400).send({
             message: 'Erro ativando o cliente',
             data: req.body,
             error: e
         })
-    })
+    }        
 }

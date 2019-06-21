@@ -10,6 +10,7 @@ const app = express();
 
 //conecta ao banco
 mongoose.connect('mongodb+srv://fabiostefani:fabiostefani@fabiostefani-mongodb-8xxdq.mongodb.net/test?retryWrites=true&w=majority')
+// mongoose.connect('mongodb://localhost:27017/exampleDb')
 
 //carrega os models
 const Product = require('./models/product');
