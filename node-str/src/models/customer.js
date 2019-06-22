@@ -11,6 +11,17 @@ const schema = new Schema({
         trim: true,
         unique: true        
     },
+    email: {
+        type: String,
+        required: [true, 'O campo e-mail é obrigatório'],
+        trim: true,
+        unique: true        
+    },
+    password: {
+        type: String,
+        required: [true, 'O campo senha é obrigatório'],
+        trim: true        
+    },
     active: {
         type: Boolean,
         required: [true, 'O campo ativo é obrigatório'],

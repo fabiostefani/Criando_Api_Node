@@ -37,3 +37,7 @@
         npm install mongoose --save
     mongo sempre deixa a conexão aberta
     colocar a string de conexão no app
+
+. Para habilitar o recurso de uso de GUID
+    npm install guid --save
+    após fazer require aonde se deseja utilizar

@@ -8,6 +8,7 @@
 
  router.get('/', controller.get);
  router.get('/name/:name', controller.getByName);
+ router.get('/id/:id', controller.getById);
 // router.get('/:slug', controller.getBySlug);
 
  router.post('/', controller.post);
