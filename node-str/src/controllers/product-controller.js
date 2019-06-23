@@ -1,9 +1,8 @@
 /* eslint-disable no-undef */
 'use strict'
 
-const mongoose = require('mongoose');
-const Product = mongoose.model('Product');
-const ValidationContract = require('../validators/fluent-validador');
+//const ValidationContract = require('../validators/base/fluent-validador');
+const ValidatorProduct = require('../validators/product-validador');
 const repository = require('../repositories/product-repository');
 
 exports.get = async(req, res, next) => {
@@ -62,12 +61,13 @@ exports.post = async(req, res, next) => {
     // ...product...
     // product.save();
 
-    let contract = new ValidationContract();
-    contract.hasMinLen(req.body.title, 3, 'O título deve conter pelo menos 3 caracteres');
-    contract.hasMinLen(req.body.slug, 3, 'O slug deve conter pelo menos 3 caracteres');
-    contract.hasMinLen(req.body.description, 3, 'A descrição deve conter pelo menos 3 caracteres');
-    contract.isRequired(req.body.tags, 'Obrigatório informar as TAGS');
-    contract.isGreaterThan(req.body.price, 0, 'O preço deve ser superior a zero');
+    let contract = ValidatorProduct.validateCreate(req.body);
+    // let contract = new ValidationContract();
+    // contract.hasMinLen(req.body.title, 3, 'O título deve conter pelo menos 3 caracteres');
+    // contract.hasMinLen(req.body.slug, 3, 'O slug deve conter pelo menos 3 caracteres');
+    // contract.hasMinLen(req.body.description, 3, 'A descrição deve conter pelo menos 3 caracteres');
+    // contract.isRequired(req.body.tags, 'Obrigatório informar as TAGS');
+    // contract.isGreaterThan(req.body.price, 0, 'O preço deve ser superior a zero');
 
     if (!contract.isValid()){
         res.status(400).send(contract.errors()).end();
@@ -89,10 +89,11 @@ exports.post = async(req, res, next) => {
 
 exports.put = async(req, res, next) => {
     
-    let contract = new ValidationContract();
-    contract.hasMinLen(req.body.title, 3, 'O título deve conter pelo menos 3 caracteres');    
-    contract.hasMinLen(req.body.description, 3, 'A descrição deve conter pelo menos 3 caracteres');
-    contract.isGreaterThan(req.body.price, 0, 'O preço deve ser superior a zero');
+    let contract = ValidatorProduct.validateUpdate(req.body);
+    // let contract = new ValidationContract();
+    // contract.hasMinLen(req.body.title, 3, 'O título deve conter pelo menos 3 caracteres');    
+    // contract.hasMinLen(req.body.description, 3, 'A descrição deve conter pelo menos 3 caracteres');
+    // contract.isGreaterThan(req.body.price, 0, 'O preço deve ser superior a zero');
 
     if (!contract.isValid()){
         res.status(400).send(contract.errors()).end();

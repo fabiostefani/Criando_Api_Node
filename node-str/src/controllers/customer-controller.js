@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 'use strict'
 
-const ValidationContract = require('../validators/fluent-validador');
+const ValidatioCustomer = require('../validators/customer-validador');
 const repository = require('../repositories/customer-repository');
 
 function retStatusCode200 (res, data){
@@ -61,11 +61,7 @@ exports.getByName = async(req, res, next) => {
 }
 
 exports.post = async(req, res, next) => {
-
-    let contract = new ValidationContract();
-    contract.hasMinLen(req.body.name, 3, 'O Nome deve conter pelo menos 3 caracteres');
-    contract.isEmail(req.body.email, 'E-mail inválido');
-    contract.hasMinLen(req.body.password, 6, 'A senha deve conter ao menos 6 caracteres');
+    let contract = ValidatioCustomer.validar(req.body);
     
     if (!contract.isValid()){
         res.status(400).send(contract.errors()).end();
@@ -85,11 +81,8 @@ exports.post = async(req, res, next) => {
 }
 
 exports.put = async(req, res, next) => {
-    let contract = new ValidationContract();
-    contract.hasMinLen(req.body.name, 3, 'O Nome deve conter pelo menos 3 caracteres');
-    contract.isEmail(req.body.email, 'E-mail inválido');
-    contract.hasMinLen(req.body.password, 6, 'A senha deve conter ao menos 6 caracteres');
-    
+    let contract =  ValidatioCustomer.validar(req.body);
+        
     if (!contract.isValid()){
         res.status(400).send(contract.errors()).end();
         return;

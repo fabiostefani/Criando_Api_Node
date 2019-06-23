@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 'use strict'
 
-const ValidationContract = require('../validators/fluent-validador');
+const ValidationOrder = require('../validators/order-validator');
 const repository = require('../repositories/order-repository');
 const guid = require('guid');
 
@@ -69,7 +69,7 @@ exports.post = async(req, res, next) => {
         items: req.body.items
     };
     
-    let contract = new ValidationContract();
+    let contract = ValidationOrder.validateCreate(data);
     // contract.hasMinLen(req.body.name, 3, 'O Nome deve conter pelo menos 3 caracteres');
     // contract.isEmail(req.body.email, 'E-mail inválido');
     // contract.hasMinLen(req.body.password, 6, 'A senha deve conter ao menos 6 caracteres');
