@@ -63,7 +63,6 @@ exports.getByNumber = async (req, res, next) => {
 }
 
 exports.post = async(req, res, next) => {
-
     let data = {
         customer: req.body.customer,
         number: guid.raw().substring(0, 6),

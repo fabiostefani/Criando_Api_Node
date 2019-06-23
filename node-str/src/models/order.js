@@ -5,16 +5,13 @@ const Schema = mongoose.Schema;
 
 
 const schema = new Schema({
-    customer: {
-        type: mongoose.Schema.Types.ObjectId, //FORMA DE FAZER FK
-        ref: 'Customer',
-        required: [true, 'O campo cliente é obrigatório']        
+     customer: {
+         type: mongoose.Schema.Types.ObjectId, //FORMA DE FAZER FK
+         ref: 'Customer'
     },
     number: {
         type: String,
-        required: [true, 'Não informado o número do pedido'],
-        trim: true,
-        unique: true        
+        required: true      
     },
     createdate: {
         type: Date,

@@ -5,7 +5,9 @@ const Order = mongoose.model('Order');
 
 //#region GET
 exports.get = async() => {
-    const res = await Order.find({}); //INDICA QUAIS COLUNAS DESEJO RETORNAR NA BUSCA
+    const res = await Order.find({}, 'number status createdate')
+        .populate('customer', 'name ')
+        .populate('items.product', 'title');
     return res;                 
            
 }
@@ -24,8 +26,8 @@ exports.getByNumber = async(number) => {
 //#endregion
 
 exports.create = async(data) => {
-    var Order = new Order(data);
-    await Order.save();    
+    var order = new Order(data);
+    await order.save();    
 }
 
 // exports.update = async(id, data) => {
