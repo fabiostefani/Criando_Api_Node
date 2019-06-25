@@ -33,7 +33,12 @@ const schema = new Schema({ //DEFININDO O SCHEMA DO
     tags: [{
         type: String,
         required: [true, 'Não foi informada nenhuma tag']
-    }]
+    }],
+    image: {
+        type: String,
+        required: true,
+        trim: true
+    },
 });
 
 module.exports = mongoose.model('Product', schema);

@@ -3,6 +3,8 @@
 
 const ValidatioCustomer = require('../validators/customer-validador');
 const repository = require('../repositories/customer-repository');
+const md5 = require('md5');
+const emailService = require('../services/infra/email-service');
 
 function retStatusCode200 (res, data){
       res.status(200).send(data);
@@ -69,7 +71,17 @@ exports.post = async(req, res, next) => {
     }
 
     try {
-        await repository.create(req.body);
+        await repository.create({
+            name: req.body.name,
+            email: req.body.email,
+            password: md5(req.body.password + global.SALT_KEY)
+        });
+
+        emailService.send(
+            req.body.email, 
+            'Bem vindo ao fabiostefani.io', 
+            global.EMAIL_TMPL.replace('{0}', req.body.name));
+
         retStatusCode201(res, 'Cliente cadastrado com sucesso');        
     } catch (e) {
         res.status(400).send({
@@ -144,4 +156,22 @@ exports.activate = async(req, res, next) => {
             error: e
         })
     }        
+}
+
+exports.sendEmail = async(req, res, next) => {
+    
+    try {
+        emailService.send(
+            req.body.email, 
+            'Bem vindo ao fabiostefani.io', 
+            global.EMAIL_TMPL.replace('{0}', req.body.name));
+
+        retStatusCode201(res, 'E-mail enviado com sucesso');        
+    } catch (e) {
+        res.status(400).send({
+            message: 'Falha ao cadastrar o cliente',
+            data: req.body,
+            error: e
+        })
+    }
 }

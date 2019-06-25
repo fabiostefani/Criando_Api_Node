@@ -16,5 +16,6 @@
  router.put('/inactivate/:id', controller.inactivate );
  router.put('/activate/:id', controller.activate );
  router.delete('/', controller.delete );
+ router.post('/email', controller.sendEmail);
 
 module.exports = router;

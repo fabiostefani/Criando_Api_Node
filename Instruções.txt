@@ -41,3 +41,17 @@
 . Para habilitar o recurso de uso de GUID
     npm install guid --save
     após fazer require aonde se deseja utilizar
+
+. Para habilitar o recurso de MD5
+    npm install md5 --save
+
+. Uso do sendGrid
+    Tem que criar a conta no sendGrid
+    Tem que criar a API no sendGrid
+    npm install sendgrid@2.0.0 --save //(@2.0.0) é para especificar a versão do sendgrid que será utilizado
+
+. Storage do Azure
+    npm install azurestorage@2.1.0 --save
+    no azure, criar uma conta de armazenamento
+    criar containers para separar os tipos de imagens
+    pode ser gerenciado através do microsoft azure storage explorer
