@@ -5,13 +5,14 @@
  const router = express.Router();
 
  const controller = require('../controllers/order-controller');
+ const authService = require('../services/infra/auth-service');
 
- router.get('/', controller.get);
- router.get('/id/:id', controller.getById);
- router.get('/number/:number', controller.getByNumber);
+ router.get('/', authService.authorize, controller.get);
+ router.get('/id/:id', authService.authorize, controller.getById);
+ router.get('/number/:number', authService.authorize, controller.getByNumber);
 
- router.post('/', controller.post);
+ router.post('/', authService.authorize, controller.post);
 //  router.put('/:id', controller.put );
- router.delete('/', controller.delete );
+ router.delete('/', authService.authorize, controller.delete );
 
 module.exports = router;

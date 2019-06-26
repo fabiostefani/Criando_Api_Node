@@ -55,3 +55,7 @@
     no azure, criar uma conta de armazenamento
     criar containers para separar os tipos de imagens
     pode ser gerenciado através do microsoft azure storage explorer
+
+. Autenticação
+    npm install jsonwebtoken@7.4.0 --save
+    após criar uma classe de gerenciamento desse token, já que poderá ser utilizado em vários lugares no sistema

@@ -18,4 +18,6 @@
  router.delete('/', controller.delete );
  router.post('/email', controller.sendEmail);
 
+ router.post('/authenticate', controller.authenticate);
+
 module.exports = router;

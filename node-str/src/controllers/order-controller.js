@@ -4,6 +4,7 @@
 const ValidationOrder = require('../validators/order-validator');
 const repository = require('../repositories/order-repository');
 const guid = require('guid');
+const autheService = require('../services/infra/auth-service');
 
 function retStatusCode200 (res, data){
       res.status(200).send(data);
@@ -63,16 +64,16 @@ exports.getByNumber = async (req, res, next) => {
 }
 
 exports.post = async(req, res, next) => {
-    let data = {
-        customer: req.body.customer,
+    const token = req.body.token || req.query.token || req.headers['x-access-token'];
+    const data = await autheService.decodeToken(token);
+    
+    let order = {
+        customer: data.id,
         number: guid.raw().substring(0, 6),
         items: req.body.items
     };
     
-    let contract = ValidationOrder.validateCreate(data);
-    // contract.hasMinLen(req.body.name, 3, 'O Nome deve conter pelo menos 3 caracteres');
-    // contract.isEmail(req.body.email, 'E-mail inválido');
-    // contract.hasMinLen(req.body.password, 6, 'A senha deve conter ao menos 6 caracteres');
+    let contract = ValidationOrder.validateCreate(order);
     
     if (!contract.isValid()){
         res.status(400).send(contract.errors()).end();
@@ -80,7 +81,7 @@ exports.post = async(req, res, next) => {
     }
     
     try {
-        await repository.create(data);
+        await repository.create(order);
         retStatusCode201(res, 'Pedido cadastrado com sucesso');        
     } catch (e) {
         res.status(400).send({
