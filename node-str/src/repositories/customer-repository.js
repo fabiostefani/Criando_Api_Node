@@ -16,7 +16,7 @@ exports.getByName = async(nome) => {
 }
 
 exports.getById = async(id) => {
-    var res = await Customer.findOne({_id: id});
+    var res = await Customer.findById(id);
     return res;
 }
 

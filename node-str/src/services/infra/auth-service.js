@@ -29,3 +29,33 @@ exports.authorize = function (req, res, next) {
         });
     }
 }
+
+var getTokenByRequest = exports.getTokenByRequest = (req) => {
+    return req.body.token || req.query.token || req.headers['x-access-token'];
+}
+
+exports.isAdmin = function(req, res, next) {
+    // var token = req.body.token || req.query.token || req.headers['x-access-token'];//this.getTokenRequest(req);
+    var token = getTokenByRequest(req);
+    if (!token) {
+        res.status(401).json({
+            message: 'Token inválido'
+        });        
+    } else {
+        jwt.verify(token, global.SALT_KEY, function (error, decoded) {
+            if (error) {
+                res.status(401).json({
+                    message: 'Token inválido'
+                });            
+            } else {
+                if (decoded.roles.includes('admin')) {
+                    next();
+                } else {
+                    res.status(403).json({
+                        message: 'Esta funcionalidade é restrita para administradores'
+                    });
+                }
+            }
+        });
+    }
+}

@@ -64,7 +64,7 @@ exports.getByNumber = async (req, res, next) => {
 }
 
 exports.post = async(req, res, next) => {
-    const token = req.body.token || req.query.token || req.headers['x-access-token'];
+    const token = autheService.getTokenByRequest(req);//.body.token || req.query.token || req.headers['x-access-token'];
     const data = await autheService.decodeToken(token);
     
     let order = {

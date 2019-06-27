@@ -26,7 +26,13 @@ const schema = new Schema({
         type: Boolean,
         required: [true, 'O campo ativo é obrigatório'],
         default: true
-    }
+    },
+    roles: [{
+        type: String,
+        required: true,
+        enum: ['user', 'admin'],
+        default: 'user'
+    }]
 })
 
 module.exports = mongoose.model('Customer', schema);

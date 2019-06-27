@@ -5,6 +5,7 @@
  const router = express.Router();
 
  const controller = require('../controllers/customer-controller');
+ const authService = require('../services/infra/auth-service');
 
  router.get('/', controller.get);
  router.get('/name/:name', controller.getByName);
@@ -19,5 +20,6 @@
  router.post('/email', controller.sendEmail);
 
  router.post('/authenticate', controller.authenticate);
+ router.post('/refresh-token', authService.authorize, controller.refreshToken);
 
 module.exports = router;
