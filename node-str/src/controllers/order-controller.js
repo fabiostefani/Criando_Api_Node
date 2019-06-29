@@ -5,32 +5,14 @@ const ValidationOrder = require('../validators/order-validator');
 const repository = require('../repositories/order-repository');
 const guid = require('guid');
 const autheService = require('../services/infra/auth-service');
-
-function retStatusCode200 (res, data){
-      res.status(200).send(data);
-}
-
-function retStatusCode201 (res, msg){
-    res.status(200).send({
-        message: msg
-    });
-}
-
-
-// function retStatusCode400(res, erro){
-//     res.status(400).send({
-//         message: 'Falha ao processar a requisição',
-//         error: erro
-//     });
-// }
+const statusCode = require('../infra/retStatusCode');
 
 exports.get = async (req, res, next) => {
     try{
         var data = await repository.get();
-        //res.status(200).send(data);
-        retStatusCode200(res, data);
+        statusCode.retSucesso(res, data);
     }catch(e){
-        res.status(500).send({
+        statusCode.retInternalServerError(res, {
             message: 'Falha ao processar a requisição',
             error: e
         });
@@ -40,10 +22,9 @@ exports.get = async (req, res, next) => {
 exports.getById = async (req, res, next) => {
     try{
         var data = await repository.getById(req.params.id);
-        //res.status(200).send(data);
-        retStatusCode200(res, data);
+        statusCode.retSucesso(res,  data);
     }catch(e){
-        res.status(500).send({
+        statusCode.retInternalServerError(res, {
             message: 'Falha ao processar a requisição',
             error: e
         });
@@ -53,10 +34,9 @@ exports.getById = async (req, res, next) => {
 exports.getByNumber = async (req, res, next) => {
     try{
         var data = await repository.getByNumber(req.params.number);
-        //res.status(200).send(data);
-        retStatusCode200(res, data);
+        statusCode.retSucesso(res, data);
     }catch(e){
-        res.status(500).send({
+        statusCode.retInternalServerError(res, {
             message: 'Falha ao processar a requisição',
             error: e
         });
@@ -76,15 +56,15 @@ exports.post = async(req, res, next) => {
     let contract = ValidationOrder.validateCreate(order);
     
     if (!contract.isValid()){
-        res.status(400).send(contract.errors()).end();
+        statusCode.retErro(res,contract.errors()).end();
         return;
     }
     
     try {
         await repository.create(order);
-        retStatusCode201(res, 'Pedido cadastrado com sucesso');        
+        statusCode.retCreated(res, 'Pedido cadastrado com sucesso');        
     } catch (e) {
-        res.status(400).send({
+        statusCode.retErro(res,{
             message: 'Falha ao cadastrar o pedido',
             data: req.body,
             error: e
@@ -120,11 +100,11 @@ exports.post = async(req, res, next) => {
 exports.delete = async(req, res, next) => {
     try {
         await repository.delete(req.body.id);
-        retStatusCode200(res, {
+        statusCode.retSucesso(res, {
             message: 'Pedido removido com sucesso'
         });        
     } catch (e) {
-        res.status(400).send({
+        statusCode.retErro(res, {
             message: 'Erro ao remover o pedido',
             error: e
         })

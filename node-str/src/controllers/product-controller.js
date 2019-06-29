@@ -7,13 +7,14 @@ const repository = require('../repositories/product-repository');
 const azure = require('azure-storage');
 const config = require('../config');
 const guid = require('guid');
+const statusCode = require('../infra/retStatusCode');
 
 exports.get = async(req, res, next) => {
     try{
         var data = await repository.get();
-        res.status(200).send(data);
+        statusCode.retSucesso(res, data);
     } catch(e){
-        res.status(500).send({
+        statusCode.retInternalServerError(res, {
             message: 'Falha ao processar sua requisição',
             error: e
         });
@@ -24,9 +25,9 @@ exports.getById = async(req, res, next) => {
 
     try {
         var data = await repository.getById(req.params.id);
-        res.status(200).send(data);
+        statusCode.retSucesso(res, data);
     }catch(e){
-        res.status(500).send({
+        statusCode.retInternalServerError(res, {
             message: 'Falha ao processar sua requisição',
             error: e
         });
@@ -36,9 +37,9 @@ exports.getById = async(req, res, next) => {
 exports.getBySlug = async (req, res, next) => {
     try {
         var data = await repository.getBySlug(req.params.slug);
-        res.status(200).send(data);
+        statusCode.retSucesso(res, data);
     }catch(e){
-        res.status(500).send({
+        statusCode.retInternalServerError(res, {
             message: 'Falha ao processar sua requisição',
             error: e
         });
@@ -48,9 +49,9 @@ exports.getBySlug = async (req, res, next) => {
 exports.getByTag = async(req, res, next) => {
     try {
         var data = await repository.getByTag(req.params.tag);
-        res.status(200).send(data);
+        statusCode.retSucesso(res, data);
     }catch(e){
-        res.status(500).send({
+        statusCode.retInternalServerError(res, {
             message: 'Falha ao processar sua requisição',
             error: e
         });
@@ -62,7 +63,7 @@ exports.post = async(req, res, next) => {
     let contract = ValidatorProduct.validateCreate(req.body);    
 
     if (!contract.isValid()){
-        res.status(400).send(contract.errors()).end();
+        statusCode.retErro(res, contract.errors()).end();
         return;
     }
 
@@ -96,11 +97,11 @@ exports.post = async(req, res, next) => {
             image: 'https://cursonodejs.blob.core.windows.net/product-image/' + filename
 
         });
-        res.status(201).send({
+        statusCode.retCreated(res,  {
             message: 'Produto cadastrado com sucesso.'
         });
     }catch(e){
-        res.status(500).send({
+        statusCode.retInternalServerError(res, {
             message: 'Falha ao processar sua requisição',
             error: e
         });
@@ -116,17 +117,17 @@ exports.put = async(req, res, next) => {
     // contract.isGreaterThan(req.body.price, 0, 'O preço deve ser superior a zero');
 
     if (!contract.isValid()){
-        res.status(400).send(contract.errors()).end();
+        statusCode.retErro(res, contract.errors()).end();
         return;
     }
 
     try {
         await repository.update(req.params.id, req.body);
-        res.status(200).send({
+        statusCode.retSucesso(res, {
             message: 'Produto atualizado com sucesso'
         });
     }catch(e){
-        res.status(500).send({
+        statusCode.retInternalServerError(res, {
             message: 'Falha ao processar sua requisição',
             error: e
         });
@@ -136,11 +137,11 @@ exports.put = async(req, res, next) => {
 exports.delete = async(req, res, next) => {
     try {
         await repository.delete(req.body.id);
-        res.status(200).send({
+        statusCode.retSucesso(res, {
             message: 'Produto removido com sucesso'
         });
     }catch(e){
-        res.status(500).send({
+        statusCode.retInternalServerError(res, {
             message: 'Falha ao processar sua requisição',
             error: e
         });
