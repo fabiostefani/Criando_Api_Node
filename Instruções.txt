@@ -59,3 +59,9 @@
 . Autenticação
     npm install jsonwebtoken@7.4.0 --save
     após criar uma classe de gerenciamento desse token, já que poderá ser utilizado em vários lugares no sistema
+
+. Secrets Keys
+    npm install dotenv --save
+    criar o arquivo .env com as variáveis que precisa ter
+    no app, carregar o arquivo .env
+        require('dotenv').config();
